@@ -10,33 +10,35 @@ on:
       MANIFEST_BRANCH:
         description: 'MANIFEST_BRANCH'
         required: true
-        default: '11.0'
+        default: '12.1'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/OrangeFoxRecovery/device_xiaomi_garden'
+        default: 'https://github.com/Burhanverse/device_xiaomi_garnet-TWRP'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
-        default: 'fox_11.0_Q'
+        default: 'android-12.1'
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
-        default: 'device/xiaomi/garden'
+        default: 'device/xiaomi/garnet'
       COMMON_TREE_URL:
-        description: 'COMMON_TREE_URL (if no common tree, leave blank)'
-        required: false
+        description: 'COMMON_TREE_URL'
+        required: true
+        default: 'https://github.com/Burhanverse/device_xiaomi_sm84xx-common-TWRP'
       COMMON_PATH:
-        description: 'COMMON_PATH (if no common tree, leave blank)'
-        required: false
+        description: 'COMMON_PATH'
+        required: true
+        default: 'device/xiaomi/sm84xx-common'
       DEVICE_NAME:
         description: 'DEVICE_NAME'
         required: true
-        default: 'garden'
+        default: 'garnet'
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
-        default: 'twrp_garden'
+        default: 'twrp_garnet'
       BUILD_TARGET:
         description: 'BUILD_TARGET'
         required: true
@@ -52,7 +54,7 @@ jobs:
  
     # You might want to Checkout your repo first, but not mandatory
     - name: Check Out
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
@@ -108,6 +110,9 @@ jobs:
         cd ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
         set +e
         source build/envsetup.sh
+        export FOX_AB_DEVICE=1
+        export OF_AB_DEVICE_WITH_RECOVERY_PARTITION=1
+        export OF_MAINTAINER=Aqua
         export ALLOW_MISSING_DEPENDENCIES=true
         set -e
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
