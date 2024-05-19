@@ -80,7 +80,7 @@ jobs:
     - name: Sync SHRP minimal manifest
       run: |
         cd ${{ steps.pwd.outputs.workspace-folder }}
-        repo init -u ${{ github.event.inputs.SYNC_URL }} -b shrp-12.1 ${{ github.event.inputs.MANIFEST_BRANCH }}
+        repo init -u ${{ github.event.inputs.SYNC_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
